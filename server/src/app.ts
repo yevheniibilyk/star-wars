@@ -1,8 +1,11 @@
 import express from 'express';
+import cors from 'cors';
 import config from './config';
-const { hero, heroes } = require('./api');
+import { hero, heroes } from './api';
 
 const app = express();
+
+app.use(cors());
 
 app.get('/api/hero/:id', hero);
 app.get('/api/heroes', heroes);

@@ -1,0 +1,13 @@
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+
+  &__header {
+    &__btn {
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  }
+}

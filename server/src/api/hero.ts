@@ -15,7 +15,7 @@ async function getHero(req: any, res: any) {
 
     return res.send(heroItem);
   } catch (e) {
-    return res.status(500).send(e);
+    return res.status(404).send(e.message);
   }
 }
 

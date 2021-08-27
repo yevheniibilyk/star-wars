@@ -9,7 +9,7 @@ async function heroesRequest(page: string | number = 1) {
   return data;
 }
 
-async function getHeroes(req: any, res: any) {
+async function getHeroes(req: any, res: any, next: any) {
   try {
     const { page = 1 } = req.query;
 
@@ -17,7 +17,7 @@ async function getHeroes(req: any, res: any) {
 
     return res.send(heroes);
   } catch (e) {
-    return res.status(500).send(e);
+    next(e);
   }
 }
 

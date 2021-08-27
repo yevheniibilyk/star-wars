@@ -1,7 +1,7 @@
 import axios from 'axios';
-import cachedOperation from "./cache";
+import cachedOperation from './cache';
 import { hero } from './cache/models.json';
-import { API_URL } from "../constants";
+import { API_URL } from '../constants';
 
 async function heroRequest(id: string | number = 1) {
   const { data } = await axios.get(`${API_URL}/${id}`);

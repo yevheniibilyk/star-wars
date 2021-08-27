@@ -4,10 +4,10 @@ import {
   BrowserRouter as Router,
   Switch,
   Route
-} from "react-router-dom";
-import Header from "./Header";
-import HeroesList from "../HeroesList";
-import Hero from "../Hero";
+} from 'react-router-dom';
+import Header from './Header';
+import HeroesList from '../HeroesList';
+import Hero from '../Hero';
 import background from '../../images/space.jpg';
 
 function App() {

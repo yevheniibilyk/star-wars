@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Hero } from "../../../types/Hero";
-import { axios } from "../../../utils";
-import {CircularProgress} from "@material-ui/core";
+import { Hero } from '../../../types/Hero';
+import { axios } from '../../../utils';
+import { CircularProgress } from '@material-ui/core';
 import '../styles/_hero-page.scss';
-import HeroCard from "./HeroCard";
+import HeroCard from './HeroCard';
 
 type HeroPageState = {
   hero?: Hero;

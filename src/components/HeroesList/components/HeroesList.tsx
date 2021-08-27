@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { DataGrid, GridCellParams, GridColDef } from '@material-ui/data-grid';
-import { axios } from "../../../utils";
-import type { Hero } from "../../../types/Hero";
-import getHeroIdFromUrl from "../utils/getHeroIdFromUrl";
+import { axios } from '../../../utils';
+import type { Hero } from '../../../types/Hero';
+import getHeroIdFromUrl from '../utils/getHeroIdFromUrl';
 import { Link } from 'react-router-dom';
-import {Snackbar} from "@material-ui/core";
+import { Snackbar } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import '../styles/_heroes-list.scss';
 
@@ -19,6 +19,7 @@ const columns: GridColDef[] = [
     headerName: 'Name',
     flex: 2,
     disableColumnMenu: true,
+    // eslint-disable-next-line react/display-name
     renderCell: (params: GridCellParams) => (
       <Link
         className="heroes-list__name"

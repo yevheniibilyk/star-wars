@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import {Hero} from "../../../types/Hero";
-import {Card, CardContent, CardMedia, Typography} from "@material-ui/core";
-import Img from "../../../images/s-l300.jpg";
-import Param from "./Param";
+import { Hero } from '../../../types/Hero';
+import { Card, CardContent, CardMedia, Typography } from '@material-ui/core';
+import Img from '../../../images/s-l300.jpg';
+import Param from './Param';
 import '../styles/_hero-card.scss';
 
 type HeroCardProps = {

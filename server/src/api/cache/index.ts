@@ -13,7 +13,7 @@ function getCacheKey(model: CacheModel, arg: string | number) {
 async function cachedOperation(
   model: CacheModel,
   arg: string | number,
-  fallbackFunction: (arg: string | number) => Promise<Object>
+  fallbackFunction: (arg: string | number) => Promise<any>
 ) {
   const cacheKey = getCacheKey(model, arg);
 

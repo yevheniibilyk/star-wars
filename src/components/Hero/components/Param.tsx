@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import '../styles/_hero-page.scss';
-import { Typography } from "@material-ui/core";
+import { Typography } from '@material-ui/core';
 
 type ParamProps = {
   name: string;

@@ -12,7 +12,6 @@ const columns: GridColDef[] = [
   { field: 'id',
     headerName: 'ID',
     width: 80,
-    // flex: 1,
     disableColumnMenu: true
   },
   {
@@ -28,6 +27,12 @@ const columns: GridColDef[] = [
         {params.formattedValue}
       </Link>
     )
+  },
+  {
+    field: 'gender',
+    headerName: 'Gender',
+    flex: 1,
+    disableColumnMenu: true
   },
   {
     field: 'height',

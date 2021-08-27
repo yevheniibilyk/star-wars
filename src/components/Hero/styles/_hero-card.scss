@@ -1,0 +1,28 @@
+.hero-card {
+  display: flex;
+  width: 60%;
+  max-width: 100%;
+  padding: 25px;
+
+  @media only screen and (max-width: 700px) {
+    width: auto;
+  }
+
+  &__content {
+    flex: 1;
+    margin-left: 20px;
+  }
+
+  &__image {
+    width: 200px;
+    height: 200px;
+  }
+
+  &__param {
+    display: flex;
+
+    > p:first-child {
+      margin-right: 5px;
+    }
+  }
+}

@@ -1,6 +1,10 @@
 .heroes-list {
   padding: 20px;
 
+  > div {
+    background-color: white;
+  }
+
   &__name {
     color: black;
     font-weight: bold;

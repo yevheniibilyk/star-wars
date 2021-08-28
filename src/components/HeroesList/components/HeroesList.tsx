@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { DataGrid, GridCellParams, GridColDef } from '@material-ui/data-grid';
+import { DataGrid, GridCellParams, GridColDef, GridSortModel } from '@material-ui/data-grid';
 import _uniq from 'lodash.uniq';
+import _orderBy from 'lodash.orderby';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
@@ -14,7 +15,8 @@ const columns: GridColDef[] = [
   { field: 'id',
     headerName: 'ID',
     width: 80,
-    disableColumnMenu: true
+    disableColumnMenu: true,
+    sortable: false
   },
   {
     field: 'name',
@@ -35,19 +37,22 @@ const columns: GridColDef[] = [
     field: 'gender',
     headerName: 'Gender',
     flex: 1,
-    disableColumnMenu: true
+    disableColumnMenu: true,
+    sortable: false
   },
   {
     field: 'height',
     headerName: 'Height',
     flex: 1,
-    disableColumnMenu: true
+    disableColumnMenu: true,
+    sortable: false
   },
   {
     field: 'mass',
     headerName: 'Mass',
     flex: 1,
-    disableColumnMenu: true
+    disableColumnMenu: true,
+    sortable: false
   },
   {
     field: 'birth_year',
@@ -69,6 +74,7 @@ type HeroesListState = {
   currentPage: number;
   heroesTotal: number;
   loading: boolean;
+  sortModel: GridSortModel;
   error: string;
 };
 
@@ -82,6 +88,7 @@ class HeroesList extends Component<HeroesListProps, HeroesListState> {
       currentPage: 1,
       heroesTotal: 0,
       loading: false,
+      sortModel: [],
       error: ''
     }
   }
@@ -130,17 +137,31 @@ class HeroesList extends Component<HeroesListProps, HeroesListState> {
     this.setState({ error: '' });
   }
 
+  sortRows = (heroesList: Array<Hero>) => {
+    const { sortModel } = this.state;
+
+    if (!sortModel || !sortModel.length) {
+      return heroesList;
+    }
+
+    return _orderBy(heroesList, sortModel[0].field, sortModel[0].sort || false);
+  }
+
   getPaginatedData = () => {
     const { currentPage, heroesList } = this.state;
 
     const startIndex = currentPage * ITEMS_PER_PAGE - ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
 
-    return heroesList.slice(startIndex, endIndex);
+    return this.sortRows(heroesList).slice(startIndex, endIndex);
   }
 
+  onSortModelChange = (newModel: GridSortModel) => {
+    this.setState({ sortModel: newModel });
+  };
+
   render() {
-    const { heroesTotal, loading, error } = this.state;
+    const { heroesTotal, loading, error, sortModel } = this.state;
 
     return (
       <div className="heroes-list">
@@ -152,6 +173,9 @@ class HeroesList extends Component<HeroesListProps, HeroesListState> {
           rowCount={heroesTotal}
           paginationMode="server"
           onPageChange={(newPage) => this.onPageChange(newPage + 1)}
+          sortingMode="server"
+          sortModel={sortModel}
+          onSortModelChange={this.onSortModelChange}
           rowsPerPageOptions={[ITEMS_PER_PAGE]}
           loading={loading}
           disableSelectionOnClick

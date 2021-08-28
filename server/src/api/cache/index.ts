@@ -1,6 +1,7 @@
 import NodeCache from 'node-cache';
 
-const cache = new NodeCache( { stdTTL: 100 } );
+const FIVE_MIN = 5 * 60;
+const cache = new NodeCache( { stdTTL: FIVE_MIN } );
 
 type CacheModel = {
   key: string
@@ -25,7 +26,7 @@ async function cachedOperation(
     return cachedResult;
   }
 
-  console.log('Making API request for: ', cacheKey);
+  console.log('API request for: ', cacheKey);
 
   const result = await fallbackFunction(arg);
 

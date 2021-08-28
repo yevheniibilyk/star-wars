@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HeroPage should be able to render HeroPage 1`] = `
+<div>
+  <div
+    class="hero-page"
+  >
+    <div
+      class="MuiPaper-root MuiCard-root hero-card MuiPaper-elevation1 MuiPaper-rounded"
+    >
+      <div
+        class="MuiCardMedia-root hero-card__image"
+        style="background-image: url(s-l300.jpg);"
+      />
+      <div
+        class="MuiCardContent-root hero-card__content"
+      >
+        <h4
+          class="MuiTypography-root MuiTypography-h4"
+        >
+          Luke Skywalker
+        </h4>
+        <div
+          class="hero-card__param"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            Height
+            :
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            172
+          </p>
+        </div>
+        <div
+          class="hero-card__param"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            Gender
+            :
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            male
+          </p>
+        </div>
+        <div
+          class="hero-card__param"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            Mass
+            :
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            83
+          </p>
+        </div>
+        <div
+          class="hero-card__param"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            Skin color
+            :
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            white
+          </p>
+        </div>
+        <div
+          class="hero-card__param"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            Eye color
+            :
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            blue
+          </p>
+        </div>
+        <div
+          class="hero-card__param"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            Birth year
+            :
+          </p>
+          <p
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-colorTextSecondary"
+          >
+            1999
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

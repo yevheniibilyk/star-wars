@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { CircularProgress } from '@material-ui/core';
 import { Hero } from '../../../types/Hero';
 import { axios } from '../../../utils';
-import { CircularProgress } from '@material-ui/core';
-import '../styles/_hero-page.scss';
 import HeroCard from './HeroCard';
+import '../styles/_hero-page.scss';
 
 type HeroPageState = {
   hero?: Hero;
@@ -39,7 +39,6 @@ class HeroPage extends Component<RouteComponentProps, HeroPageState> {
       this.setState({ hero });
     } catch (e) {
       this.setState({ error: true })
-
     } finally {
       this.setState({ loading: false });
     }

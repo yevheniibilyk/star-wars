@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { DataGrid, GridCellParams, GridColDef } from '@material-ui/data-grid';
+import _uniq from 'lodash.uniq';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { Link } from 'react-router-dom';
 import { axios } from '../../../utils';
 import type { Hero } from '../../../types/Hero';
 import getHeroIdFromUrl from '../utils/getHeroIdFromUrl';
-import { Link } from 'react-router-dom';
-import { Snackbar } from '@material-ui/core';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import '../styles/_heroes-list.scss';
 
+const ITEMS_PER_PAGE = 10;
 const columns: GridColDef[] = [
   { field: 'id',
     headerName: 'ID',
@@ -62,6 +64,7 @@ function Alert(props: AlertProps) {
 type HeroesListProps = any;
 
 type HeroesListState = {
+  fetchedPages: Array<number>;
   heroesList: Array<Hero>;
   currentPage: number;
   heroesTotal: number;
@@ -74,6 +77,7 @@ class HeroesList extends Component<HeroesListProps, HeroesListState> {
     super(props);
 
     this.state = {
+      fetchedPages: [],
       heroesList: [],
       currentPage: 1,
       heroesTotal: 0,
@@ -85,21 +89,36 @@ class HeroesList extends Component<HeroesListProps, HeroesListState> {
   componentDidMount() {
     this.searchHeroes();
   }
-  
+
+  onPageChange = async (page = 1) => {
+    const { fetchedPages } = this.state;
+
+    if (!fetchedPages.includes(page)) {
+      await this.searchHeroes(page);
+    }
+
+    this.setState({ currentPage: page });
+  }
+
   searchHeroes = async (page = 1) => {
+
     try {
       this.setState({ loading: true });
 
       const { data: { count, results = [] } }: any = await axios.get(`/heroes?page=${page}`);
 
-      this.setState({
-        heroesList: results.map((item: Hero) => ({
-          ...item,
-          id: getHeroIdFromUrl(item.url)
-        })),
+      this.setState(({ fetchedPages, heroesList }) => ({
+        heroesList: [
+          ...heroesList,
+          ...results.map((item: Hero) => ({
+            ...item,
+            id: getHeroIdFromUrl(item.url)
+          }))
+        ],
         heroesTotal: count,
-        currentPage: page
-      });
+        currentPage: page,
+        fetchedPages: _uniq([...fetchedPages, page])
+      }));
     } catch (e) {
       this.setState({ error: e.message });
     } finally {
@@ -111,20 +130,29 @@ class HeroesList extends Component<HeroesListProps, HeroesListState> {
     this.setState({ error: '' });
   }
 
+  getPaginatedData = () => {
+    const { currentPage, heroesList } = this.state;
+
+    const startIndex = currentPage * ITEMS_PER_PAGE - ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+
+    return heroesList.slice(startIndex, endIndex);
+  }
+
   render() {
-    const { heroesList, heroesTotal, loading, error } = this.state;
+    const { heroesTotal, loading, error } = this.state;
 
     return (
       <div className="heroes-list">
         <DataGrid
-          rows={heroesList}
+          rows={this.getPaginatedData()}
           columns={columns}
           pagination
-          pageSize={10}
+          pageSize={ITEMS_PER_PAGE}
           rowCount={heroesTotal}
           paginationMode="server"
-          onPageChange={(newPage) => this.searchHeroes(newPage + 1)}
-          rowsPerPageOptions={[10]}
+          onPageChange={(newPage) => this.onPageChange(newPage + 1)}
+          rowsPerPageOptions={[ITEMS_PER_PAGE]}
           loading={loading}
           disableSelectionOnClick
         />

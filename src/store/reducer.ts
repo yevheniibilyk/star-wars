@@ -2,8 +2,13 @@ import * as actions from './actions';
 import { Action, AppState } from './type';
 
 const initialState = {
-  currentHero: void 0,
-  heroLoading: false
+  loading: false,
+  heroLoading: false,
+  pagination: {
+    pages: {},
+    total: 0,
+    loading: false
+  }
 };
 
 const reducer = (state: AppState = initialState, action: Action): AppState => {
@@ -17,6 +22,36 @@ const reducer = (state: AppState = initialState, action: Action): AppState => {
       return {
         ...state,
         heroLoading: action.value
+      };
+
+    case actions.HEROES_PAGE_LOADING:
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          loading: action.value
+        }
+      };
+
+    case actions.SET_HEROES_TOTAL:
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          total: action.value
+        }
+      };
+
+    case actions.SET_HEROES_PAGE:
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          pages: {
+            ...state.pagination.pages,
+            ...action.value
+          }
+        }
       };
   }
 

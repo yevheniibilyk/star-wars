@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import _get from 'lodash.get';
 import { DataGrid, GridCellParams, GridColDef, GridSortModel } from '@material-ui/data-grid';
-import _uniq from 'lodash.uniq';
 import _orderBy from 'lodash.orderby';
-import { Snackbar } from '@material-ui/core';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
-import { axios } from '../../../utils';
 import type { Hero } from '../../../types/Hero';
-import getHeroIdFromUrl from '../utils/getHeroIdFromUrl';
 import '../styles/_heroes-list.scss';
+import { Dispatch } from 'redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getHeroesPage } from '../../../store/actionCreators';
+import { AppState, Pagination } from '../../../store/type';
 
 const ITEMS_PER_PAGE = 10;
 const columns: GridColDef[] = [
@@ -62,136 +62,65 @@ const columns: GridColDef[] = [
   }
 ];
 
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+function getSortedRows({ pagination, currentPage, sortModel }: {
+  pagination: Pagination,
+  currentPage: number,
+  sortModel: GridSortModel }
+) {
+  const { pages } = pagination;
+
+  const allHeroes = Object.keys(pages).reduce((allList: Array<Hero>, key: string) => {
+    const heroes: Array<Hero> = _get(pages, key, []);
+
+    return [...allList, ...heroes];
+  }, []);
+
+  const sortedHeroes = _orderBy(allHeroes, sortModel[0].field, sortModel[0].sort || false);
+
+  const startIndex = currentPage * ITEMS_PER_PAGE - ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+
+  return sortedHeroes.slice(startIndex, endIndex);
 }
 
-type HeroesListProps = any;
+function HeroesList() {
+  const pagination: Pagination = useSelector((state: AppState) => state.pagination);
+  const { pages, total, loading } = pagination;
 
-type HeroesListState = {
-  fetchedPages: Array<number>;
-  heroesList: Array<Hero>;
-  currentPage: number;
-  heroesTotal: number;
-  loading: boolean;
-  sortModel: GridSortModel;
-  error: string;
-};
+  const dispatch: Dispatch<any> = useDispatch();
 
-class HeroesList extends Component<HeroesListProps, HeroesListState> {
-  constructor(props: HeroesListProps) {
-    super(props);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
-    this.state = {
-      fetchedPages: [],
-      heroesList: [],
-      currentPage: 1,
-      heroesTotal: 0,
-      loading: false,
-      sortModel: [],
-      error: ''
-    }
-  }
+  const heroesList: Array<Hero> = _get(pages, currentPage, []);
 
-  componentDidMount() {
-    this.searchHeroes();
-  }
+  useEffect(() => {
+    dispatch(getHeroesPage(currentPage));
+  }, [dispatch, currentPage]);
 
-  onPageChange = async (page = 1) => {
-    const { fetchedPages } = this.state;
+  const pageItems = sortModel && sortModel.length
+    ? getSortedRows({ pagination, currentPage, sortModel })
+    : heroesList;
 
-    if (!fetchedPages.includes(page)) {
-      await this.searchHeroes(page);
-    }
-
-    this.setState({ currentPage: page });
-  }
-
-  searchHeroes = async (page = 1) => {
-
-    try {
-      this.setState({ loading: true });
-
-      const { data: { count, results = [] } }: any = await axios.get(`/heroes?page=${page}`);
-
-      this.setState(({ fetchedPages, heroesList }) => ({
-        heroesList: [
-          ...heroesList,
-          ...results.map((item: Hero) => ({
-            ...item,
-            id: getHeroIdFromUrl(item.url)
-          }))
-        ],
-        heroesTotal: count,
-        currentPage: page,
-        fetchedPages: _uniq([...fetchedPages, page])
-      }));
-    } catch (e) {
-      this.setState({ error: e.message });
-    } finally {
-      this.setState({ loading: false });
-    }
-  }
-
-  closeError = () => {
-    this.setState({ error: '' });
-  }
-
-  sortRows = (heroesList: Array<Hero>) => {
-    const { sortModel } = this.state;
-
-    if (!sortModel || !sortModel.length) {
-      return heroesList;
-    }
-
-    return _orderBy(heroesList, sortModel[0].field, sortModel[0].sort || false);
-  }
-
-  getPaginatedData = () => {
-    const { currentPage, heroesList } = this.state;
-
-    const startIndex = currentPage * ITEMS_PER_PAGE - ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-
-    return this.sortRows(heroesList).slice(startIndex, endIndex);
-  }
-
-  onSortModelChange = (newModel: GridSortModel) => {
-    this.setState({ sortModel: newModel });
-  };
-
-  render() {
-    const { heroesTotal, loading, error, sortModel } = this.state;
-
-    return (
-      <div className="heroes-list">
-        <DataGrid
-          rows={this.getPaginatedData()}
-          columns={columns}
-          pagination
-          pageSize={ITEMS_PER_PAGE}
-          rowCount={heroesTotal}
-          paginationMode="server"
-          onPageChange={(newPage) => this.onPageChange(newPage + 1)}
-          sortingMode="server"
-          sortModel={sortModel}
-          onSortModelChange={this.onSortModelChange}
-          rowsPerPageOptions={[ITEMS_PER_PAGE]}
-          loading={loading}
-          disableSelectionOnClick
-        />
-        <Snackbar
-          open={Boolean(error)}
-          autoHideDuration={6000}
-          onClose={this.closeError}
-        >
-          <Alert onClose={this.closeError} severity="error">
-            {error}
-          </Alert>
-        </Snackbar>
-      </div>
-    );
-  }
+  return (
+    <div className="heroes-list">
+      <DataGrid
+        rows={pageItems}
+        columns={columns}
+        pagination
+        pageSize={ITEMS_PER_PAGE}
+        rowCount={total}
+        paginationMode="server"
+        onPageChange={(newPage) => setCurrentPage(newPage + 1)}
+        sortingMode="server"
+        sortModel={sortModel}
+        onSortModelChange={setSortModel}
+        rowsPerPageOptions={[ITEMS_PER_PAGE]}
+        loading={loading}
+        disableSelectionOnClick
+      />
+    </div>
+  );
 }
 
 export default HeroesList;

@@ -1,7 +1,9 @@
 import axios from 'axios';
-import cachedOperation from './cache';
-import { hero } from './cache/models.json';
 import { API_URL } from '../constants';
+import { Cache, NodeCacheModel } from './cache';
+
+const HeroCacheModel = new NodeCacheModel();
+const HeroCache = new Cache(HeroCacheModel, 'hero');
 
 async function heroRequest(id: string | number = 1) {
   const { data } = await axios.get(`${API_URL}/${id}`);
@@ -11,7 +13,7 @@ async function heroRequest(id: string | number = 1) {
 
 async function getHero(req: any, res: any) {
   try {
-    const heroItem = await cachedOperation(hero, req.params.id, heroRequest);
+    const heroItem = await HeroCache.cachedOperation(req.params.id, heroRequest);
 
     return res.send(heroItem);
   } catch (e) {

@@ -1,17 +1,17 @@
-import { CacheModelInterface } from './CacheModelInterface';
+import { ICacheModel } from './interfaces';
 
-export default class JsCacheModel implements CacheModelInterface {
+export default class JsCacheModel implements ICacheModel {
   model: any;
 
   constructor() {
     this.model = new Map();
   }
 
-  get(key: string) {
+  get<T>(key: T) {
     return this.model.get(key);
   }
 
-  set(key: string, value: any) {
+  set<T>(key: T, value: any) {
     return this.model.set(key, value);
   }
 }

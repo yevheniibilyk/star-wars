@@ -1,11 +1,11 @@
-import { CacheModelInterface } from './CacheModelInterface';
+import { ICacheModel } from './interfaces';
 
 export default class Cache {
-  private cacheModel: CacheModelInterface;
+  private cacheModel: ICacheModel;
 
   private readonly keyPrefix: string;
 
-  constructor(cacheModel: CacheModelInterface, keyPrefix: string) {
+  constructor(cacheModel: ICacheModel, keyPrefix: string) {
     this.cacheModel = cacheModel;
 
     this.keyPrefix = keyPrefix;
@@ -23,7 +23,10 @@ export default class Cache {
     return this.cacheModel.set(this.buildKey(key), value);
   }
 
-  public async cachedOperation(key: string, fallback: (arg: string | number) => Promise<any>) {
+  public async cachedOperation(
+    key: number | string,
+    fallback: (arg: string | number) => Promise<any>
+  ) {
     const cachedResult = this.cacheModel.get(key);
 
     if (cachedResult) {

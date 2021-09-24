@@ -1,20 +1,20 @@
 import NodeCache from 'node-cache';
-import { CacheModelInterface } from './CacheModelInterface';
+import { ICacheModel } from './interfaces';
 
 const FIVE_MIN = 5 * 60;
 
-export default class NodeCacheModel implements CacheModelInterface {
+export default class NodeCacheModel implements ICacheModel {
   model: any;
 
   constructor() {
     this.model = new NodeCache( { stdTTL: FIVE_MIN } );
   }
 
-  get(key: string) {
+  get<T>(key: T) {
     return this.model.get(key);
   }
 
-  set(key: string, value: any) {
+  set<T>(key: T, value: any) {
     return this.model.set(key, value);
   }
 }
